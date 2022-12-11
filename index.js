@@ -113,6 +113,7 @@ const getRealType = (value) => {
 };
 
 const getRealTypesOfItems = (arr) => {
+    return arr.map(getRealType);
     // Return array with real types of items of given array
 };
 
