@@ -5,6 +5,39 @@ const testBlock = (name) => {
     console.group(`# ${name}\n`);
 };
 
+const compareTowArrays = (a, b) => {
+    if (!Array.isArray(a) || !Array.isArray(b)) {
+        throw new Error('One of the arguments is not an array!');
+    }
+    if (a === b) {
+        return true;
+    }
+
+    const tasksA = [];
+    const tasksB = [];
+
+    do {
+        const arrA = tasksA.pop() || a;
+        const arrB = tasksB.pop() || b;
+
+        if (arrA.length !== arrB.length) {
+            return false;
+        }
+
+        for (let i = 0; i < arrA.length; i++) {
+            if (arrA[i] !== arrB[i]) {
+                if (Array.isArray(arrA[i]) && Array.isArray(arrB[i])) {
+                    tasksA.push(arrA[i]);
+                    tasksB.push(arrB[i]);
+                } else {
+                    return false;
+                }
+            }
+        }
+    } while (tasksA.length > 0);
+    return true;
+};
+
 const areEqual = (a, b) => {
     return a === b;
     // Compare arrays of primitives
