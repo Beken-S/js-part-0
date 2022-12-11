@@ -167,14 +167,16 @@ test('All values are strings', allItemsHaveTheSameType(['11', '12', '13']), true
 
 test(
     'All values are strings but wait',
-    allItemsHaveTheSameType(['11', new String('12'), '13'])
-    // What the result?
+    allItemsHaveTheSameType(['11', new String('12'), '13']),
+    // Так как new String('12') будет объектом (для преобразования к примитиву необходимо вызвать метод valueOf)
+    false
 );
 
 test(
     'Values like a number',
-    allItemsHaveTheSameType([123, 123 / 'a', 1 / 0])
-    // What the result?
+    allItemsHaveTheSameType([123, 123 / 'a', 1 / 0]),
+    // Так как выражение 123 / 'a' вернет NaN и выражение 1 / 0 вернет Infinity, а NaN и Infinity это number
+    true
 );
 
 test('Values like an object', allItemsHaveTheSameType([{}]), true);
@@ -182,28 +184,66 @@ test('Values like an object', allItemsHaveTheSameType([{}]), true);
 testBlock('getTypesOfItems VS getRealTypesOfItems');
 
 const knownTypes = [
-    // Add values of different types like boolean, object, date, NaN and so on
+    true,
+    123,
+    NaN,
+    Infinity,
+    -Infinity,
+    9007199254740991n,
+    'test',
+    function () {},
+    undefined,
+    null,
+    [1, 2, 3],
+    {},
+    new Date(),
+    /ab+c/,
+    new Set(),
+    new Map(),
+    new Error(),
+    Symbol('test'),
 ];
 
 test('Check basic types', getTypesOfItems(knownTypes), [
-    // What the types?
+    'boolean',
+    'number',
+    'number',
+    'number',
+    'number',
+    'bigint',
+    'string',
+    'function',
+    'undefined',
+    'object',
+    'object',
+    'object',
+    'object',
+    'object',
+    'object',
+    'object',
+    'object',
+    'symbol',
 ]);
 
 test('Check real types', getRealTypesOfItems(knownTypes), [
     'boolean',
     'number',
+    'NaN',
+    'Infinity',
+    '-Infinity',
+    'bigint',
     'string',
-    'array',
-    'object',
     'function',
     'undefined',
     'null',
-    'NaN',
-    'Infinity',
+    'array',
+    'object',
     'date',
     'regexp',
     'set',
-    // What else?
+    'map',
+    'error',
+    'symbol',
 ]);
 
 testBlock('everyItemHasAUniqueRealType');
