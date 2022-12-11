@@ -73,6 +73,12 @@ const getTypesOfItems = (arr) => {
 };
 
 const allItemsHaveTheSameType = (arr) => {
+    const set = new Set(getTypesOfItems(arr));
+
+    if (set.size === 1) {
+        return true;
+    }
+    return false;
     // Return true if all items of array have the same type
 };
 
