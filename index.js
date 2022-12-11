@@ -63,6 +63,7 @@ const test = (whatWeTest, actualResult, expectedResult) => {
 // Functions
 
 const getType = (value) => {
+    return typeof value;
     // Return string with a native JS type of value
 };
 
