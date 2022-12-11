@@ -125,6 +125,18 @@ const everyItemHasAUniqueRealType = (arr) => {
 };
 
 const countRealTypes = (arr) => {
+    const result = arr.reduce((acc, value) => {
+        const type = getRealType(value);
+
+        if (acc[type] != null) {
+            acc[type] += 1;
+        } else {
+            acc[type] = 1;
+        }
+
+        return acc;
+    }, {});
+    return Object.entries(result).sort();
     // Return an array of arrays with a type and count of items
     // with this type in the input array, sorted by type.
     // Like an Object.entries() result: [['boolean', 3], ['string', 5]]
