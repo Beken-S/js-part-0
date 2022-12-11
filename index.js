@@ -39,6 +39,9 @@ const compareTowArrays = (a, b) => {
 };
 
 const areEqual = (a, b) => {
+    if (Array.isArray(a) && Array.isArray(b)) {
+        return compareTowArrays(a, b);
+    }
     return a === b;
     // Compare arrays of primitives
     // Remember: [] !== []
