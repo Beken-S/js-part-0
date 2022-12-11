@@ -83,6 +83,25 @@ const allItemsHaveTheSameType = (arr) => {
 };
 
 const getRealType = (value) => {
+    const type = getType(value);
+
+    if (type === 'object') {
+        if (value === null) {
+            return 'null';
+        }
+        return value.constructor.name.toLowerCase();
+    }
+
+    if (type === 'number' && !Number.isFinite(value)) {
+        if (Number.isNaN(value)) {
+            return 'NaN';
+        }
+        if (value < 0) {
+            return '-Infinity';
+        }
+        return 'Infinity';
+    }
+    return type;
     // Return string with a “real” type of value.
     // For example:
     //     typeof new Date()       // 'object'
