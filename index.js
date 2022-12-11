@@ -68,6 +68,7 @@ const getType = (value) => {
 };
 
 const getTypesOfItems = (arr) => {
+    return arr.map(getType);
     // Return array with types of items of given array
 };
 
