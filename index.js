@@ -148,6 +148,10 @@ testBlock('getType');
 
 test('Boolean', getType(true), 'boolean');
 test('Number', getType(123), 'number');
+test('NaN', getType(NaN), 'number');
+test('Infinity', getType(Infinity), 'number');
+test('-Infinity', getType(-Infinity), 'number');
+test('BigInt', getType(9007199254740991n), 'bigint');
 test('String', getType('whoo'), 'string');
 test('Array', getType([]), 'object');
 test('Object', getType({}), 'object');
@@ -158,6 +162,7 @@ test(
 );
 test('Undefined', getType(undefined), 'undefined');
 test('Null', getType(null), 'object');
+test('Symbol', getType(Symbol('test')), 'symbol');
 
 testBlock('allItemsHaveTheSameType');
 
@@ -171,6 +176,10 @@ test(
     // Так как new String('12') будет объектом (для преобразования к примитиву необходимо вызвать метод valueOf)
     false
 );
+
+test('All values are number but wait', allItemsHaveTheSameType([11, new Number(12), 13]), false);
+
+test('All values are boolean but wait', allItemsHaveTheSameType([false, new Boolean(true), false]), false);
 
 test(
     'Values like a number',
@@ -269,3 +278,50 @@ test('Counted unique types are sorted', countRealTypes([{}, null, true, !null, !
 ]);
 
 // Add several positive and negative tests
+
+testBlock('compareTowArrays');
+
+test('Two arrays are not equal (length)', compareTowArrays([1, 2, 3], [1, 2, 3, 4]), false);
+
+test('Two arrays are not equal (value)', compareTowArrays([1, 2, 3], [1, 2, 4]), false);
+
+test('Two arrays are equal (value)', compareTowArrays([1, 2, 3], [1, 2, 3]), true);
+
+const a = [1, 2, 3];
+const b = [1, 2, 4];
+
+test('Two arrays are equal (reference)', compareTowArrays(a, a), true);
+
+test(
+    'Two multidimensional arrays are not equal',
+    compareTowArrays(
+        [
+            [1, [7]],
+            [[3, [8]], a],
+            [b, 6],
+        ],
+        [
+            [1, [7]],
+            [[3, [9]], a],
+            [b, 6],
+        ]
+    ),
+    false
+);
+
+test(
+    'Two multidimensional arrays are equal',
+    compareTowArrays(
+        [
+            [1, [7]],
+            [[3, [8]], a],
+            [b, 6],
+        ],
+        [
+            [1, [7]],
+            [[3, [8]], a],
+            [b, 6],
+        ]
+    ),
+    true
+);
