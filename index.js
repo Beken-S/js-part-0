@@ -5,36 +5,42 @@ const testBlock = (name) => {
     console.group(`# ${name}\n`);
 };
 
-const compareTowArrays = (a, b) => {
+/**
+ * Функция сравнивает два массива с заданной глубиной вложенности.
+ * @param {Array} a Массив.
+ * @param {Array} b Массив.
+ * @param {number} [maxDepth=5] Максимальная допустимая глубина вложенности сравниваемых массивов.
+ * @returns {boolean} Возвращает true если массивы равны и false если нет.
+ * @throw Выбрасывает ошибку если аргумент a или b не являются массивами.
+ * @throw Выбрасывает ошибку если maxDeep не число.
+ * @throw Выбрасывает ошибку если превышена максимальная глубина вложенности в переданных массивах.
+ */
+const compareTowArrays = (a, b, maxDepth = 5) => {
     if (!Array.isArray(a) || !Array.isArray(b)) {
         throw new Error('One of the arguments is not an array!');
+    }
+    if (typeof maxDepth !== 'number' || Number.isNaN(maxDepth)) {
+        throw new Error('Maximum depth is not a number!');
+    }
+    if (maxDepth < 0) {
+        throw new Error('Maximum depth exceeded!');
     }
     if (a === b) {
         return true;
     }
+    if (a.length !== b.length) {
+        return false;
+    }
 
-    const tasksA = [];
-    const tasksB = [];
-
-    do {
-        const arrA = tasksA.pop() || a;
-        const arrB = tasksB.pop() || b;
-
-        if (arrA.length !== arrB.length) {
+    for (let i = 0; i < a.length; i++) {
+        if (Array.isArray(a[i]) && Array.isArray(b[i])) {
+            if (!compareTowArrays(a[i], b[i], maxDepth - 1)) {
+                return false;
+            }
+        } else if (a[i] !== b[i]) {
             return false;
         }
-
-        for (let i = 0; i < arrA.length; i++) {
-            if (arrA[i] !== arrB[i]) {
-                if (Array.isArray(arrA[i]) && Array.isArray(arrB[i])) {
-                    tasksA.push(arrA[i]);
-                    tasksB.push(arrB[i]);
-                } else {
-                    return false;
-                }
-            }
-        }
-    } while (tasksA.length > 0);
+    }
     return true;
 };
 
