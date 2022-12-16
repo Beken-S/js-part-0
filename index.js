@@ -133,7 +133,15 @@ const countRealTypes = (arr) => {
 
         return acc;
     }, {});
-    return Object.entries(result).sort();
+    return Object.entries(result).sort((a, b) => {
+        if (a[0] > b[0]) {
+            return 1;
+        }
+        if (a[0] < b[0]) {
+            return -1;
+        }
+        return 0;
+    });
     // Return an array of arrays with a type and count of items
     // with this type in the input array, sorted by type.
     // Like an Object.entries() result: [['boolean', 3], ['string', 5]]
