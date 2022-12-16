@@ -12,10 +12,10 @@ const testBlock = (name) => {
  * @param {number} [maxDepth=5] Максимальная допустимая глубина вложенности сравниваемых массивов.
  * @returns {boolean} Возвращает true если массивы равны и false если нет.
  * @throw Выбрасывает ошибку если аргумент a или b не являются массивами.
- * @throw Выбрасывает ошибку если maxDeep не число.
+ * @throw Выбрасывает ошибку если maxDepth не число.
  * @throw Выбрасывает ошибку если превышена максимальная глубина вложенности в переданных массивах.
  */
-const compareTowArrays = (a, b, maxDepth = 5) => {
+const compareTwoArrays = (a, b, maxDepth = 5) => {
     if (!Array.isArray(a) || !Array.isArray(b)) {
         throw new Error('One of the arguments is not an array!');
     }
@@ -34,7 +34,7 @@ const compareTowArrays = (a, b, maxDepth = 5) => {
 
     for (let i = 0; i < a.length; i++) {
         if (Array.isArray(a[i]) && Array.isArray(b[i])) {
-            if (!compareTowArrays(a[i], b[i], maxDepth - 1)) {
+            if (!compareTwoArrays(a[i], b[i], maxDepth - 1)) {
                 return false;
             }
         } else if (a[i] !== b[i]) {
@@ -46,7 +46,7 @@ const compareTowArrays = (a, b, maxDepth = 5) => {
 
 const areEqual = (a, b) => {
     if (Array.isArray(a) && Array.isArray(b)) {
-        return compareTowArrays(a, b);
+        return compareTwoArrays(a, b);
     }
     return a === b;
     // Compare arrays of primitives
@@ -286,20 +286,20 @@ test('Counted unique types are sorted', countRealTypes([{}, null, true, !null, !
 
 testBlock('compareTowArrays');
 
-test('Two arrays are not equal (length)', compareTowArrays([1, 2, 3], [1, 2, 3, 4]), false);
+test('Two arrays are not equal (length)', compareTwoArrays([1, 2, 3], [1, 2, 3, 4]), false);
 
-test('Two arrays are not equal (value)', compareTowArrays([1, 2, 3], [1, 2, 4]), false);
+test('Two arrays are not equal (value)', compareTwoArrays([1, 2, 3], [1, 2, 4]), false);
 
-test('Two arrays are equal (value)', compareTowArrays([1, 2, 3], [1, 2, 3]), true);
+test('Two arrays are equal (value)', compareTwoArrays([1, 2, 3], [1, 2, 3]), true);
 
 const a = [1, 2, 3];
 const b = [1, 2, 4];
 
-test('Two arrays are equal (reference)', compareTowArrays(a, a), true);
+test('Two arrays are equal (reference)', compareTwoArrays(a, a), true);
 
 test(
     'Two multidimensional arrays are not equal',
-    compareTowArrays(
+    compareTwoArrays(
         [
             [1, [7]],
             [[3, [8]], a],
@@ -316,7 +316,7 @@ test(
 
 test(
     'Two multidimensional arrays are equal',
-    compareTowArrays(
+    compareTwoArrays(
         [
             [1, [7]],
             [[3, [8]], a],
