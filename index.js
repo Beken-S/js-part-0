@@ -92,20 +92,11 @@ const getRealType = (value) => {
     const type = getType(value);
 
     if (type === 'object') {
-        if (value === null) {
-            return 'null';
-        }
-        return value.constructor.name.toLowerCase();
+        return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
     }
 
     if (type === 'number' && !Number.isFinite(value)) {
-        if (Number.isNaN(value)) {
-            return 'NaN';
-        }
-        if (value < 0) {
-            return '-Infinity';
-        }
-        return 'Infinity';
+        return value.toString();
     }
     return type;
     // Return string with a “real” type of value.
