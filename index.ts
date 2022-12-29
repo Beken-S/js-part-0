@@ -1,17 +1,17 @@
+type BaseType = 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function';
+type RealType = string;
+type CountRealTypes = {
+    [key: RealType]: number;
+};
+
 // Test utils
 
-const testBlock = (name) => {
+const testBlock = (name: string): void => {
     console.groupEnd();
     console.group(`# ${name}\n`);
 };
 
-const compareTwoArrays = (a, b, maxDepth = 5) => {
-    if (!Array.isArray(a) || !Array.isArray(b)) {
-        throw new Error('One of the arguments is not an array!');
-    }
-    if (typeof maxDepth !== 'number' || Number.isNaN(maxDepth)) {
-        throw new Error('Maximum depth is not a number!');
-    }
+const compareTwoArrays = (a: any[], b: any[], maxDepth = 5): boolean => {
     if (maxDepth < 0) {
         throw new Error('Maximum depth exceeded!');
     }
@@ -34,14 +34,14 @@ const compareTwoArrays = (a, b, maxDepth = 5) => {
     return true;
 };
 
-const areEqual = (a, b) => {
+const areEqual = (a: unknown, b: unknown): boolean => {
     if (Array.isArray(a) && Array.isArray(b)) {
         return compareTwoArrays(a, b);
     }
     return a === b;
 };
 
-const test = (whatWeTest, actualResult, expectedResult) => {
+const test = (whatWeTest: unknown, actualResult: unknown, expectedResult: unknown): void => {
     if (areEqual(actualResult, expectedResult)) {
         console.log(`[OK] ${whatWeTest}\n`);
     } else {
@@ -56,16 +56,16 @@ const test = (whatWeTest, actualResult, expectedResult) => {
 
 // Functions
 
-const getType = (value) => {
+const getType = (value: unknown): BaseType => {
     return typeof value;
 };
 
-const getTypesOfItems = (arr) => {
+const getTypesOfItems = (arr: unknown[]): BaseType[] => {
     return arr.map(getType);
 };
 
-const allItemsHaveTheSameType = (arr) => {
-    const set = new Set(getTypesOfItems(arr));
+const allItemsHaveTheSameType = (arr: unknown[]): boolean => {
+    const set: Set<BaseType> = new Set(getTypesOfItems(arr));
 
     if (set.size === 1) {
         return true;
@@ -73,31 +73,29 @@ const allItemsHaveTheSameType = (arr) => {
     return false;
 };
 
-const getRealType = (value) => {
-    const type = getType(value);
-
-    if (type === 'object') {
+const getRealType = (value: unknown): RealType => {
+    if (typeof value === 'object') {
         return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
     }
 
-    if (type === 'number' && !Number.isFinite(value)) {
+    if (typeof value === 'number' && !Number.isFinite(value)) {
         return value.toString();
     }
-    return type;
+    return typeof value;
 };
 
-const getRealTypesOfItems = (arr) => {
+const getRealTypesOfItems = (arr: unknown[]): RealType[] => {
     return arr.map(getRealType);
 };
 
-const everyItemHasAUniqueRealType = (arr) => {
-    const set = new Set(getRealTypesOfItems(arr));
+const everyItemHasAUniqueRealType = (arr: unknown[]): boolean => {
+    const set: Set<RealType> = new Set(getRealTypesOfItems(arr));
     return set.size === arr.length;
 };
 
-const countRealTypes = (arr) => {
-    const result = arr.reduce((acc, value) => {
-        const type = getRealType(value);
+const countRealTypes = (arr: unknown[]) => {
+    const result: CountRealTypes = arr.reduce((acc: CountRealTypes, value: unknown) => {
+        const type: RealType = getRealType(value);
 
         if (acc[type] != null) {
             acc[type] += 1;
@@ -154,6 +152,7 @@ test('All values are boolean but wait', allItemsHaveTheSameType([false, new Bool
 
 test(
     'Values like a number',
+    // @ts-ignore: Unreachable code error
     allItemsHaveTheSameType([123, 123 / 'a', 1 / 0]),
     true
 );
@@ -229,6 +228,7 @@ testBlock('everyItemHasAUniqueRealType');
 
 test('All value types in the array are unique', everyItemHasAUniqueRealType([true, 123, '123']), true);
 
+// @ts-ignore: Unreachable code error
 test('Two values have the same type', everyItemHasAUniqueRealType([true, 123, '123' === 123]), false);
 
 test('There are no repeated types in knownTypes', everyItemHasAUniqueRealType(knownTypes), true);
@@ -255,8 +255,8 @@ test('Two arrays are not equal (value)', compareTwoArrays([1, 2, 3], [1, 2, 4]),
 
 test('Two arrays are equal (value)', compareTwoArrays([1, 2, 3], [1, 2, 3]), true);
 
-const a = [1, 2, 3];
-const b = [1, 2, 4];
+const a: number[] = [1, 2, 3];
+const b: number[] = [1, 2, 4];
 
 test('Two arrays are equal (reference)', compareTwoArrays(a, a), true);
 
