@@ -6,13 +6,18 @@
   "author": "'Ivan Petropolsky' <i.petropolsky@hh.ru>",
   "license": "MIT",
   "scripts": {
-    "postinstall": "ln -sf $(pwd)/githooks/* .git/hooks"
+    "postinstall": "ln -sf $(pwd)/githooks/* .git/hooks",
+    "clean": "tsc --build --clean",
+    "build": "yarn clean && tsc --build",
+    "start": "./node_modules/.bin/ts-node"
   },
   "devDependencies": {
     "eslint": "8.29.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "lint-staged": "13.1.0",
-    "prettier": "2.8.0"
+    "prettier": "2.8.0",
+    "ts-node": "10.9.1",
+    "typescript": "4.9.4"
   }
 }
